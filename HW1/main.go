@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	//Тесты некоторого функционала
 	example := list.New()
 	for i := 0; i < 10; i++ {
 		example.Append(i)
