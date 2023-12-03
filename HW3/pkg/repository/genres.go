@@ -12,10 +12,7 @@ func (repo *PgRepo) AddGenre(ctx context.Context, g models.Genre) error {
 
 	request := `INSERT INTO genres (name) values ($1);`
 	_, err := repo.Pool.Exec(ctx, request, g.Name)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (repo *PgRepo) RemoveGenre(ctx context.Context, id int) error {
@@ -24,10 +21,7 @@ func (repo *PgRepo) RemoveGenre(ctx context.Context, id int) error {
 
 	request := `DELETE FROM genres WHERE id=$1;`
 	_, err := repo.Pool.Exec(ctx, request, id)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (repo *PgRepo) UpdateGenresAt(ctx context.Context, id int, g models.Genre) error {
@@ -36,10 +30,7 @@ func (repo *PgRepo) UpdateGenresAt(ctx context.Context, id int, g models.Genre) 
 
 	request := `UPDATE genres SET name=$1 WHERE id=$2;`
 	_, err := repo.Pool.Exec(ctx, request, g.Name, id)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (repo *PgRepo) ReadGenre(ctx context.Context, id int) (models.Genre, error) {
@@ -55,7 +46,7 @@ func (repo *PgRepo) ReadGenre(ctx context.Context, id int) (models.Genre, error)
 func (repo *PgRepo) ReadGenres(ctx context.Context, from int, cnt int) ([]models.Genre, error) {
 	request := `SELECT id, name FROM genres
 				WHERE id>=$1 LIMIT $2`
-	genres := []models.Genre{}
+	var genres []models.Genre
 
 	rows, err := repo.Pool.Query(ctx, request, from, cnt)
 	if err != nil {

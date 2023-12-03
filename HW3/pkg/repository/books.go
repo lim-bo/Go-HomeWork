@@ -18,10 +18,7 @@ func (repo *PgRepo) AddBook(ctx context.Context, book models.Book) error {
 		book.GenreId,
 		book.AuthorId,
 	)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (repo *PgRepo) RemoveBook(ctx context.Context, id int) error {
@@ -30,10 +27,7 @@ func (repo *PgRepo) RemoveBook(ctx context.Context, id int) error {
 
 	request := `DELETE FROM books WHERE id=$1;`
 	_, err := repo.Pool.Exec(ctx, request, id)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (repo *PgRepo) UpdateBooksAt(ctx context.Context, id int, b models.Book) error {
@@ -50,10 +44,7 @@ func (repo *PgRepo) UpdateBooksAt(ctx context.Context, id int, b models.Book) er
 		b.GenreId,
 		id,
 	)
-	if err != nil {
-		return nil
-	}
-	return nil
+	return err
 }
 
 func (repo *PgRepo) ReadBook(ctx context.Context, id int) (models.Book, error) {
@@ -71,7 +62,7 @@ func (repo *PgRepo) ReadBook(ctx context.Context, id int) (models.Book, error) {
 func (repo *PgRepo) ReadBooks(ctx context.Context, from int, cnt int) ([]models.Book, error) {
 	request := `SELECT id, name, price, genre_id, author_id FROM books
 				WHERE id>=$1 LIMIT $2`
-	books := []models.Book{}
+	var books []models.Book
 
 	rows, err := repo.Pool.Query(ctx, request, from, cnt)
 	if err != nil {

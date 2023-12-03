@@ -12,10 +12,7 @@ func (repo *PgRepo) AddAuthor(ctx context.Context, a models.Author) error {
 
 	request := `INSERT INTO authors (name) values ($1);`
 	_, err := repo.Pool.Exec(ctx, request, a.Name)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (repo *PgRepo) RemoveAuthor(ctx context.Context, id int) error {
@@ -24,10 +21,7 @@ func (repo *PgRepo) RemoveAuthor(ctx context.Context, id int) error {
 
 	request := `DELETE FROM authors WHERE id=$1;`
 	_, err := repo.Pool.Exec(ctx, request, id)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (repo *PgRepo) UpdateAuthorsAt(ctx context.Context, id int, g models.Author) error {
@@ -36,10 +30,7 @@ func (repo *PgRepo) UpdateAuthorsAt(ctx context.Context, id int, g models.Author
 
 	request := `UPDATE authors SET name=$1 WHERE id=$2;`
 	_, err := repo.Pool.Exec(ctx, request, g.Name, id)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (repo *PgRepo) ReadAuthor(ctx context.Context, id int) (models.Author, error) {
@@ -55,7 +46,7 @@ func (repo *PgRepo) ReadAuthor(ctx context.Context, id int) (models.Author, erro
 func (repo *PgRepo) ReadAuthors(ctx context.Context, from int, cnt int) ([]models.Author, error) {
 	request := `SELECT id, name FROM authors
 				WHERE id>=$1 LIMIT $2`
-	authors := []models.Author{}
+	var authors []models.Author
 
 	rows, err := repo.Pool.Query(ctx, request, from, cnt)
 	if err != nil {
