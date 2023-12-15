@@ -1,19 +1,19 @@
 package models
 
 type Book struct {
-	Id       int
-	Name     string
-	Price    int
-	GenreId  int
-	AuthorId int
+	Id       int    `json:"id"`
+	Name     string `json:"name"`
+	Price    int    `json:"price"`
+	GenreId  int    `json:"genre_id"`
+	AuthorId int    `json:"author_id"`
 }
 
 type Genre struct {
-	Id   int
-	Name string
+	Id   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 type Author struct {
-	Id   int
-	Name string
+	Id   int    `json:"id"`
+	Name string `json:"name"`
 }
