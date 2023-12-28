@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"log"
+	"log/slog"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -12,6 +13,7 @@ import (
 type api struct {
 	database *repository.PgRepo
 	r        *mux.Router
+	logger   *slog.Logger
 }
 
 func New(r *mux.Router, dbConnString string) *api {
@@ -19,7 +21,7 @@ func New(r *mux.Router, dbConnString string) *api {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	return &api{r: r, database: db}
+	return &api{r: r, database: db, logger: slog.Default()}
 }
 
 func (api *api) HandleEndpoints() {
@@ -34,6 +36,8 @@ func (api *api) HandleEndpoints() {
 	authorsRoute := api.r.HandleFunc("/api/authors", api.authors)
 	authorsRoute.Queries("id", "{id}")
 	authorsRoute = api.r.HandleFunc("/api/authors", api.authors)
+
+	api.r.Use(api.middleware)
 }
 
 func (api *api) ListenAndServe(adressStr string) error {
